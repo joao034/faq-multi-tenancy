@@ -10,8 +10,8 @@ class DocumentSeeder extends Seeder
     /**
      * Fictional knowledge base for the MVP. No external files (PDF/DOCX/JSON)
      * are used on purpose; everything the assistant can answer lives here.
-     * `embedding` starts as null and is filled later by the embeddings
-     * backfill command (Phase 3), once EmbeddingService exists.
+     * `embedding` starts as null and is filled by the `documents:embed`
+     * command after seeding.
      */
     public function run(): void
     {
