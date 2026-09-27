@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreChatRequest;
 use App\Services\ChatService;
 use Illuminate\Http\JsonResponse;
+use Throwable;
 
 class ChatController extends Controller
 {
@@ -14,9 +15,13 @@ class ChatController extends Controller
 
     public function __invoke(StoreChatRequest $request): JsonResponse
     {
-        $result = $this->chatService->handle(
-            $request->validated()
-        );
+        try {
+            $result = $this->chatService->handle($request->validated());
+        } catch (Throwable $exception) {
+            report($exception);
+
+            return response()->json(['message' => 'Unable to process request.'], 500);
+        }
 
         $statusCode = isset($result['message']) ? 404 : 200;
 

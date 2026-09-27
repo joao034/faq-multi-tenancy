@@ -8,6 +8,7 @@ class ChatService
         private BusinessResolver $businessResolver,
         private EmbeddingService $embeddingService,
         private RetrievalService $retrievalService,
+        private LLMService $llmService,
     ) {}
 
     /**
@@ -24,9 +25,8 @@ class ChatService
 
         $queryEmbedding = $this->embeddingService->generate([$data['message']])[0];
         $matches = $this->retrievalService->retrieve($business->id, $queryEmbedding);
-        $bestMatch = $matches->first();
 
-        if ($bestMatch === null) {
+        if ($matches->isEmpty()) {
             return [
                 'answer' => 'No encuentro información suficiente para responder esa pregunta.',
                 'source' => 'no_context',
@@ -34,8 +34,8 @@ class ChatService
         }
 
         return [
-            'answer' => $bestMatch['document']->answer,
-            'source' => 'retrieval',
+            'answer' => $this->llmService->answer($data['message'], $matches),
+            'source' => 'llm',
         ];
     }
 }
