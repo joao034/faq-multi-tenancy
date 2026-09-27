@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreChatRequest;
 use App\Services\ChatService;
 use Illuminate\Http\JsonResponse;
-use App\Http\Resources\ChatResource;
 
 class ChatController extends Controller
 {
@@ -19,6 +18,8 @@ class ChatController extends Controller
             $request->validated()
         );
 
-        return response()->json($result);
+        $statusCode = isset($result['message']) ? 404 : 200;
+
+        return response()->json($result, $statusCode);
     }
 }

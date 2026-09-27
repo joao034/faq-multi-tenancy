@@ -2,29 +2,40 @@
 
 namespace App\Services;
 
-
-
 class ChatService
 {
+    public function __construct(
+        private BusinessResolver $businessResolver,
+        private EmbeddingService $embeddingService,
+        private RetrievalService $retrievalService,
+    ) {}
 
-    public function __construct(private BusinessResolver $businessResolver){}
-
+    /**
+     * @param  array{to: string, from: string, message: string}  $data
+     * @return array{message: string}|array{answer: string, source: string}
+     */
     public function handle(array $data): array
     {
         $business = $this->businessResolver->resolve($data['to']);
- 
+
         if ($business === null) {
+            return ['message' => 'Business not found.'];
+        }
+
+        $queryEmbedding = $this->embeddingService->generate([$data['message']])[0];
+        $matches = $this->retrievalService->retrieve($business->id, $queryEmbedding);
+        $bestMatch = $matches->first();
+
+        if ($bestMatch === null) {
             return [
-                ['message' => 'Business not found.'],
+                'answer' => 'No encuentro información suficiente para responder esa pregunta.',
+                'source' => 'no_context',
             ];
         }
- 
-        // Placeholder until retrieval + LLM are in place.
+
         return [
-            [
-                'answer' => "Tenant: {$business->name}.",
-                'source' => 'stub',
-            ],
+            'answer' => $bestMatch['document']->answer,
+            'source' => 'retrieval',
         ];
     }
 }
