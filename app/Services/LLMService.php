@@ -13,8 +13,9 @@ class LLMService implements Agent
 
     /**
      * @param  Collection<int, array{document: Document, similarity: float}>  $matches
+     * @return array{answer: string, model: ?string, tokens: ?int}
      */
-    public function answer(string $question, Collection $matches): string
+    public function answer(string $question, Collection $matches): array
     {
         $context = $matches
             ->map(fn (array $match): string => implode("\n", [
@@ -24,10 +25,18 @@ class LLMService implements Agent
             ]))
             ->implode("\n\n");
 
-        return $this->prompt(
+        $response = $this->prompt(
             "Contexto recuperado:\n{$context}\n\nPregunta del usuario:\n{$question}",
             timeout: 60,
-        )->text;
+        );
+
+        $totalTokens = $response->usage->totalTokens();
+
+        return [
+            'answer' => $response->text,
+            'model' => $response->meta->model,
+            'tokens' => $totalTokens > 0 ? $totalTokens : null,
+        ];
     }
 
     public function instructions(): string

@@ -23,7 +23,8 @@ class ChatController extends Controller
             return response()->json(['message' => 'Unable to process request.'], 500);
         }
 
-        $statusCode = isset($result['message']) ? 404 : 200;
+        $statusCode = $result['http_status'] ?? (isset($result['message']) ? 404 : 200);
+        unset($result['http_status']);
 
         return response()->json($result, $statusCode);
     }
