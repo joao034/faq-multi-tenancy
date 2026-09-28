@@ -121,7 +121,7 @@ it('returns no context without calling the LLM when every document is below the 
     ]);
 
     $response->assertOk()->assertExactJson([
-        'answer' => 'No encuentro información suficiente para responder esa pregunta.',
+        'answer' => 'Lo siento, no encuentro información suficiente para responder esa pregunta.',
         'source' => 'no_context',
     ]);
 
@@ -265,7 +265,7 @@ it('returns no context when the LLM fails and retrieved documents have no usable
     ]);
 
     $response->assertOk()->assertExactJson([
-        'answer' => 'No encuentro información suficiente para responder esa pregunta.',
+        'answer' => 'Lo siento, no encuentro información suficiente para responder esa pregunta.',
         'source' => 'no_context',
     ]);
 

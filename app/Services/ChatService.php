@@ -6,7 +6,7 @@ use Throwable;
 
 class ChatService
 {
-    private const NO_CONTEXT_ANSWER = 'No encuentro información suficiente para responder esa pregunta.';
+    private const NO_CONTEXT_ANSWER = 'Lo siento, no encuentro información suficiente para responder esa pregunta.';
 
     public function __construct(
         private BusinessResolver $businessResolver,

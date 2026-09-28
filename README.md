@@ -59,7 +59,7 @@ El número `to` debe estar activo en `whatsapp_numbers`. El negocio se deduce de
 Cuando todo sale bien, la API responde con HTTP 200 y un campo `source` que indica cómo se generó la respuesta:
 
 - `llm`: la redactó el modelo a partir del contexto recuperado.
-- `fallback`: el LLM falló, así que se devolvió la respuesta guardada del primer documento recuperado que tuviera una respuesta no vacía.
+- `fallback`: el LLM falló, así que se devolvió la respuesta guardada del primer documento recuperado.
 - `no_context`: ningún documento tuvo la similitud suficiente, o el fallback no encontró una respuesta guardada que se pudiera usar.
 
 También hay errores controlados:
